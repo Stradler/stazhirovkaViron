@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "^0.77.0"
+  },
+  "name": "quadratic",
+  "version": "1.0.0",
+  "main": "quadratic.js",
+  "license": "MIT",
+  "dependencies": {
+    "flow-remove-types": "^1.2.3"
+  },
+  "scripts": {
+    "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty"
+  }
+}

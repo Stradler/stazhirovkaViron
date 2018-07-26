@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hotel Rooms</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <h1>Бронирование Отелей</h1>
+    <table id="bookingTable">
+
+    </table>
+    <form id="bookingForm" class="hidden" action="">
+        Въезд:<input type="text" id="dateInputFrom">
+        Выезд<input type="text" id="dateInputTo">
+        <!-- <p>Полное имя <input type="text"></p> -->
+        <p>Кол-во дней: <span id="daysCount"></span></p>
+        <p>Общая цена: <span id="price"></span></p>
+        <button id="bookButton">Забронировать</button>
+    </form>
+    <span id="name" class="hidden"></span>
+
+
+    <script src="public/index.js"></script>
+</body>
+</html>
