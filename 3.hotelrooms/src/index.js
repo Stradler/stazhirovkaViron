@@ -5,7 +5,7 @@ const rooms: Array<Room> = [new Room('Люкс 1', 50), new Room('Люкс 2', 4
 const week: Array<string> = [];
 const today: Date = new Date();
 
-for (let i = 0; i < 7; i += 1) {
+for (let i: number = 0; i < 7; i += 1) {
   const tempDay: Date = new Date(today);
   tempDay.setDate(today.getDate() + i);
   week.push(tempDay.getDate() + '.' + tempDay.getMonth() + '.' + tempDay.getFullYear());
@@ -38,7 +38,7 @@ function renderBookTable(week, rooms) {
   let rows: string = '';
   rooms.forEach(function (n, index){
     rows += '<tr><td>' + n.name + '</td>';
-    for(let i = 0; i < week.length; i += 1){
+    for(let i: number = 0; i < week.length; i += 1){
 
       if(n.bookedDays.includes(week[i])){
         rows += '<td class="red room' + index + '"></td>';
@@ -56,7 +56,7 @@ function renderBookTable(week, rooms) {
 
 }
 
-function addListeners(week, rooms){
+function addListeners(week, rooms:Array<Room>){
   rooms.forEach(function(n, index){
     let td = document.querySelectorAll('.room' + index);
     for(let i: number = 0; i < td.length; i++){
