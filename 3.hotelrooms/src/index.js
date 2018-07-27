@@ -36,7 +36,7 @@ function renderBookTable(week, rooms) {
   thead += '</thead>';
 
   let rows: string = '';
-  rooms.forEach(function (n, index){
+  rooms.forEach(function (n: Room, index: number){
     rows += '<tr><td>' + n.name + '</td>';
     for(let i: number = 0; i < week.length; i += 1){
 
@@ -66,26 +66,38 @@ function addListeners(week, rooms:Array<Room>){
 }
 
 function handleDayClick(beginDate, roomId, rooms){
+
+  
   if (rooms[roomId].bookedDays.includes(beginDate)){
     //do somethin amazing later on
-  } else {
-    renderForm();
+    renderForm("unbook");
     let form: any = document.querySelector("#bookingForm");
-    form.classList.remove("hidden");
-
     let dateInputFrom: any = document.getElementById("dateInputFrom");
     let dateInputTo: any = document.getElementById("dateInputTo");
-    let confirmButton: any = document.getElementById("confirmButton");
+    dateInputFrom.value = beginDate;
+      dateInputTo.addEventListener("change", function(){
+      handleDateChange(dateInputTo, 
+                        dateInputTo.value, 
+                        beginDate, 
+                        rooms, 
+                        roomId, "delete");
+    });
+  } else {
+    debugger;
+    renderForm("book");
+    let form: any = document.querySelector("#bookingForm");
+    let dateInputFrom: any = document.getElementById("dateInputFrom");
+    let dateInputTo: any = document.getElementById("dateInputTo");
     dateInputFrom.value = beginDate;
     dateInputTo.addEventListener("change", function(){
-      handleDateChange(dateInputTo, dateInputTo.value, beginDate, rooms, roomId);
+      handleDateChange(dateInputTo, dateInputTo.value, beginDate, rooms, roomId, "add");
     });
   }
 
 }
 
 //end date beryot s eventa
-function handleDateChange(dateInputTo, endDate, beginDate, rooms, roomId){
+function handleDateChange(dateInputTo, endDate, beginDate, rooms, roomId, operationType){
   var days = 1;
   var bYear: number = Number(beginDate.split(".")[2]);
   var bMonth: number = Number(beginDate.split(".")[1]);
@@ -119,13 +131,21 @@ function handleDateChange(dateInputTo, endDate, beginDate, rooms, roomId){
   price.textContent = days * rooms[roomId].cost;
 
   let bookButton: any = document.getElementById("bookButton");
-  bookButton.addEventListener("click", function(e){
+  if(operationType === "add"){
+    bookButton.addEventListener("click", function(e){
     e.preventDefault();
-    handleBookClick(this, dateInputTo, bookedDaysArray, rooms, roomId);
+    handleBookClickAdd(this, dateInputTo, bookedDaysArray, rooms, roomId);
   });
+  } else {
+    bookButton.addEventListener("click", function(e){
+    e.preventDefault();
+    handleBookClickRemove(this, dateInputTo, bookedDaysArray, rooms, roomId);
+  });
+  }
+  
 }
 
-function handleBookClick(bookButton, dateInputTo, bookedDays, rooms, roomId){
+function handleBookClickAdd(bookButton, dateInputTo, bookedDays, rooms, roomId){
   bookedDays.forEach(function(n){
     rooms[roomId].bookedDays.push(n);
   });
@@ -133,11 +153,25 @@ function handleBookClick(bookButton, dateInputTo, bookedDays, rooms, roomId){
   deleteForm();
 }
 
+function handleBookClickRemove(bookButton, dateInputTo, bookedDays, rooms, roomId){
+  bookedDays.forEach(function(n){
+    var index = rooms[roomId].bookedDays.indexOf(n);
+    rooms[roomId].bookedDays = [...rooms[roomId].bookedDays.slice(0, index), ...rooms[roomId].bookedDays.slice(index+1)];
+  });
+  renderBookTable(week, rooms);
+  deleteForm();
+}
 
-function renderForm(){
+
+function renderForm(formType){
   let form: any = document.getElementById("bookingForm");
-
-  let formRow = 'Въезд:<input type="text" id="dateInputFrom">Выезд<input type="text" id="dateInputTo"><!-- <p>Полное имя <input type="text"></p> --><p>Кол-во дней: <span id="daysCount"></span></p><p>Общая цена: <span id="price"></span></p><button id="bookButton">Забронировать</button>';
+  if(formType === "unbook"){
+    var formRow = 'Удалить бронь с:<input type="text" id="dateInputFrom">' + 
+    'По<input type="text" id="dateInputTo"<p>Кол-во дней: <span id="daysCount"></span></p><p>Цена станет меньше на: <span id="price"></span></p><button id="bookButton">Забронировать</button>';
+  } else {
+    var formRow = 'Въезд:<input type="text" id="dateInputFrom">Выезд<input type="text" id="dateInputTo"><p>Кол-во дней: <span id="daysCount"></span></p><p>Общая цена: <span id="price"></span></p><button id="bookButton">Забронировать</button>';
+  }
+  console.log(form);
   form.innerHTML = formRow;
 }
 
